@@ -7,6 +7,7 @@ import config from '../config/config';
 import { PatientModule } from './patient/patient.module';
 import { HistoryClinicModule } from './history-clinic/history-clinic.module';
 import { ConsultationModule } from './consultation/consultation.module';
+import { DoctorModule } from './doctor/doctor.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { ConsultationModule } from './consultation/consultation.module';
     PatientModule,
     HistoryClinicModule,
     ConsultationModule,
+    DoctorModule,
   ],
   controllers: [AppController],
   providers: [AppService],
