@@ -7,29 +7,21 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Patient } from '../../patient/entities/patient.entity';
-import { Consultation } from 'src/consultation/entities/consultation.entity';
+import { Entry } from 'src/entry/entities/entry.entity';
 
 @Entity({ name: 'historyClinic' })
 export class HistoryClinic {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
-  antecedentes: string;
-
-  @Column()
-  diagnostico: string;
-
-  @Column()
-  tratamiento: string;
-
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;
 
   @OneToOne(() => Patient, (patient) => patient.historyClinic)
-  @JoinColumn({ name: 'patient_id' })
+  @JoinColumn()
   patient: Patient;
 
-  @OneToMany(() => Consultation, (consultation) => consultation.historyClinic)
-  consultations: Consultation[];
+  @OneToMany(() => Entry, (entry) => entry.historyClinic)
+  entry: Entry[];
+
 }

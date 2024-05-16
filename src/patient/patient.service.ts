@@ -4,17 +4,20 @@ import { UpdatePatientDto } from './dto/update-patient.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Patient } from './entities/patient.entity';
 import { Repository } from 'typeorm';
+import { HistoryClinic } from 'src/history-clinic/entities/history-clinic.entity';
+
 
 @Injectable()
 export class PatientService {
   constructor(
     @InjectRepository(Patient) private patientRepository: Repository<Patient>,
+    @InjectRepository(HistoryClinic) private historyClinicRepository: Repository<HistoryClinic>,
   ) {}
 
   async create(createPatientDto: CreatePatientDto) {
     const userFound = await this.patientRepository.findOne({
       where: {
-        username: createPatientDto.username,
+        dni: createPatientDto.dni
       },
     });
 
@@ -22,18 +25,21 @@ export class PatientService {
       return new HttpException('User already exists', HttpStatus.CONFLICT);
     }
 
-    const newpacients = this.patientRepository.create(createPatientDto);
+    const newPatient = this.patientRepository.create(createPatientDto);
+    await this.patientRepository.save(newPatient);
+  
+    const historyClinic = new HistoryClinic();
+    historyClinic.patient = newPatient; 
 
-    await this.patientRepository.save(newpacients);
-
-    return newpacients;
+    await this.historyClinicRepository.save(historyClinic); 
+  
+    return newPatient;
   }
 
   async findAll() {
     return await this.patientRepository.find({
       relations: {
         historyClinic: true,
-        doctors: true,
       }
     });
   }

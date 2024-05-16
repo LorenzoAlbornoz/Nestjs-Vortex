@@ -1,5 +1,6 @@
 export class CreateDoctorDto {
-  name_doctor: string;
+  numeroDeMatricula: number;
+  firsname: string;
+  lastname: string;
   specialty: string;
-  patientIds: number[];
 }

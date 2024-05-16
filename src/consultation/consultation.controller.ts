@@ -15,9 +15,17 @@ import { UpdateConsultationDto } from './dto/update-consultation.dto';
 export class ConsultationController {
   constructor(private readonly consultationService: ConsultationService) {}
 
-  @Post()
-  create(@Body() createConsultationDto: CreateConsultationDto) {
-    return this.consultationService.create(createConsultationDto);
+  @Post('/entry/:entryId/disease/:diseaseId')
+  create(
+    @Param('entryId') entryId: string,
+    @Param('diseaseId') diseaseId: string,
+    @Body() createConsultationDto: CreateConsultationDto,
+  ) {
+    return this.consultationService.create(
+      +entryId,
+      +diseaseId,
+      createConsultationDto,
+    );
   }
 
   @Get()

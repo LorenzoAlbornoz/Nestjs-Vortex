@@ -14,5 +14,6 @@ import { Consultation } from 'src/consultation/entities/consultation.entity';
   ],
   controllers: [HistoryClinicController],
   providers: [HistoryClinicService],
+  exports: [TypeOrmModule]
 })
 export class HistoryClinicModule {}

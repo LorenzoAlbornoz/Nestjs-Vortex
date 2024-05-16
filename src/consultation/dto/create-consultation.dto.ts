@@ -1,7 +1,6 @@
 export class CreateConsultationDto {
-  sintomas?: string;
-  examenesRealizados?: string;
-  diagnostico?: string;
-  tratamiento?: string;
+  motivoDeConsulta: string;
+  diagnostico: string;
+  confimacionDeDiagnostico: string;
   notasMedico?: string;
 }

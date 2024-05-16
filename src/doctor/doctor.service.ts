@@ -4,7 +4,6 @@ import { Repository } from 'typeorm';
 import { Doctor } from './entities/doctor.entity';
 import { CreateDoctorDto } from './dto/create-doctor.dto';
 import { UpdateDoctorDto } from './dto/update-doctor.dto';
-import { Patient } from 'src/patient/entities/patient.entity';
 
 @Injectable()
 export class DoctorService {
@@ -15,7 +14,7 @@ export class DoctorService {
 
   async create(createDoctorDto: CreateDoctorDto) {
     const doctorExists = await this.doctorRepository.findOne({
-      where: { name_doctor: createDoctorDto.name_doctor },
+      where: { numeroDeMatricula: createDoctorDto.numeroDeMatricula },
     });
 
     if (doctorExists) {
@@ -24,23 +23,13 @@ export class DoctorService {
 
     const newDoctor = this.doctorRepository.create(createDoctorDto);
 
-    newDoctor.patients = createDoctorDto.patientIds.map((id) => ({
-      ...new Patient(),
-      id,
-    }));
-
     await this.doctorRepository.save(newDoctor);
 
     return newDoctor;
   }
 
   async findAll() {
-    return await this.doctorRepository.find({
-      where: {
-        patients: true,
-      },
-      relations: { patients: true },
-    });
+    return await this.doctorRepository.find();
   }
 
   async findOne(id: number) {
@@ -48,7 +37,6 @@ export class DoctorService {
       where: {
         id,
       },
-      relations: { patients: true },
     });
 
     if (!doctor) {

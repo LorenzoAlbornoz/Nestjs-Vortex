@@ -8,6 +8,9 @@ import { PatientModule } from './patient/patient.module';
 import { HistoryClinicModule } from './history-clinic/history-clinic.module';
 import { ConsultationModule } from './consultation/consultation.module';
 import { DoctorModule } from './doctor/doctor.module';
+import { PracticeModule } from './practice/practice.module';
+import { EntryModule } from './entry/entry.module';
+import { DiseaseModule } from './disease/disease.module';
 
 @Module({
   imports: [
@@ -32,7 +35,10 @@ import { DoctorModule } from './doctor/doctor.module';
     PatientModule,
     HistoryClinicModule,
     ConsultationModule,
+    PracticeModule,
+    EntryModule,
     DoctorModule,
+    DiseaseModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -1,18 +1,26 @@
-import { Patient } from 'src/patient/entities/patient.entity';
-import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
-
+import { Entry } from 'src/entry/entities/entry.entity';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity({ name: 'doctors' })
 export class Doctor {
   @PrimaryGeneratedColumn()
   id: number;
 
+  @Column({ unique: true })
+  numeroDeMatricula: number;
+
   @Column()
-  name_doctor: string;
+  firstname: string;
+
+  @Column()
+  lastname: string;
 
   @Column()
   specialty: string;
 
-  @ManyToMany(() => Patient, (patient) => patient.doctors)
-  patients: Patient[]
+  @Column()
+  fechaDeIngreso: Date;
+
+  @OneToMany(() => Entry, (entry) => entry.doctor)
+  entry: Entry[];
 }

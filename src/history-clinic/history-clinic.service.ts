@@ -22,7 +22,8 @@ export class HistoryClinicService {
   async findAll() {
     return await this.historyClinicRepository.find({
       relations: {
-        consultations: true,
+        patient: true,
+        entry: true,
       },
     });
   }
@@ -32,7 +33,7 @@ export class HistoryClinicService {
       where: {
         id,
       },
-      relations: ['consultations'],
+      relations: ['patient', 'entry'],
     });
 
     if (!historyClinic) {

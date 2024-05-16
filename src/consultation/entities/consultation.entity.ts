@@ -1,11 +1,13 @@
+import { Disease } from 'src/disease/entities/disease.entity';
+import { Entry } from 'src/entry/entities/entry.entity';
 import {
   Column,
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { HistoryClinic } from '../../history-clinic/entities/history-clinic.entity';
 
 @Entity({ name: 'consultation' })
 export class Consultation {
@@ -15,28 +17,23 @@ export class Consultation {
   @Column({ default: () => 'CURRENT_TIMESTAMP' })
   fecha: Date;
 
-  @Column({ type: 'text', nullable: true })
-  sintomas: string;
+  @Column()
+  motivoDeConsulta: string;
 
-  @Column({ type: 'text', nullable: true })
-  examenesRealizados: string;
-
-  @Column({ type: 'text', nullable: true })
+  @Column()
   diagnostico: string;
 
-  @Column({ type: 'text', nullable: true })
-  tratamiento: string;
+  @Column()
+  confimacionDeDiagnostico: string;
 
-  @Column({ type: 'text', nullable: true })
+  @Column()
   notasMedico: string;
 
-  @Column({ name: 'historyClinic_id' })
-  historyClinicId: number;
+  @ManyToOne(() => Disease, (disease) => disease.consultation)
+  @JoinColumn()
+  disease: Disease;
 
-  @ManyToOne(
-    () => HistoryClinic,
-    (historyClinic) => historyClinic.consultations,
-  )
-  @JoinColumn({ name: 'historyClinic_id' })
-  historyClinic: HistoryClinic;
+  @ManyToOne(() => Entry, (entry) => entry.consultations)
+  @JoinColumn()
+  entry: Entry;
 }
