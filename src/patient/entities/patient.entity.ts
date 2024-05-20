@@ -3,7 +3,7 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   OneToOne,
-  JoinColumn,
+  CreateDateColumn,
 } from 'typeorm';
 import { HistoryClinic } from '../../history-clinic/entities/history-clinic.entity';
 @Entity({ name: 'patients' })
@@ -26,7 +26,7 @@ export class Patient {
   @Column()
   obraSocial: string;
 
-  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  @CreateDateColumn()
   createdAt: Date;
 
   @OneToOne(() => HistoryClinic, (historyClinic) => historyClinic.patient)
