@@ -12,6 +12,7 @@ import { PracticeModule } from './practice/practice.module';
 import { EntryModule } from './entry/entry.module';
 import { DiseaseModule } from './disease/disease.module';
 import { UserModule } from './user/user.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { UserModule } from './user/user.module';
         synchronize: true,
       }),
     }),
+    AuthModule,
     PatientModule,
     HistoryClinicModule,
     ConsultationModule,

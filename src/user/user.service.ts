@@ -9,20 +9,23 @@ import { Repository } from 'typeorm';
 export class UserService {
   constructor(
     @InjectRepository(User)
-    private userRepositoyry: Repository<User>,
+    private readonly userRepository: Repository<User>,
   ) {}
 
-  async create(createUserDto: CreateUserDto) {
-    const newUser = this.userRepositoyry.create(createUserDto);
-    return await this.userRepositoyry.save(newUser);
+  create(createUserDto: CreateUserDto) {
+    return this.userRepository.save(createUserDto);
+  }
+
+  findOneByEmail(email: string) {
+    return this.userRepository.findOneBy({ email });
   }
 
   async findAll() {
-    return await this.userRepositoyry.find({});
+    return await this.userRepository.find({});
   }
 
   async findOne(id: number) {
-    const user = await this.userRepositoyry.findOne({
+    const user = await this.userRepository.findOne({
       where: {
         id,
       },
@@ -34,7 +37,7 @@ export class UserService {
   }
 
   async update(id: number, updateUserDto: UpdateUserDto) {
-    const user = await this.userRepositoyry.findOne({
+    const user = await this.userRepository.findOne({
       where: {
         id,
       },
@@ -43,11 +46,11 @@ export class UserService {
       throw new NotFoundException(`User with ID ${id} not found`);
     }
     Object.assign(user, updateUserDto);
-    return await this.userRepositoyry.save(user);
+    return await this.userRepository.save(user);
   }
 
   async remove(id: number) {
-    const user = await this.userRepositoyry.findOne({
+    const user = await this.userRepository.findOne({
       where: {
         id,
       },
@@ -55,6 +58,6 @@ export class UserService {
     if (!user) {
       throw new NotFoundException(`User with ID ${id} not found`);
     }
-    return await this.userRepositoyry.remove(user);
+    return await this.userRepository.remove(user);
   }
 }

@@ -9,6 +9,7 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Patient } from 'src/patient/entities/patient.entity';
 import { Doctor } from 'src/doctor/entities/doctor.entity';
+import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { Doctor } from 'src/doctor/entities/doctor.entity';
       Patient,
       Doctor,
     ]),
+    AuthModule,
   ],
   controllers: [EntryController],
   providers: [EntryService],

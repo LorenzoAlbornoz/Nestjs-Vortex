@@ -7,11 +7,13 @@ import { Consultation } from './entities/consultation.entity';
 import { Disease } from 'src/disease/entities/disease.entity';
 import { Doctor } from 'src/doctor/entities/doctor.entity';
 import { Entry } from 'src/entry/entities/entry.entity';
+import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
   imports: [
     ConfigModule,
     TypeOrmModule.forFeature([Consultation, Disease, Doctor, Entry]),
+    AuthModule,
   ],
   controllers: [ConsultationController],
   providers: [ConsultationService],

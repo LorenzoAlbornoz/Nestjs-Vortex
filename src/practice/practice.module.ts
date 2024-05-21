@@ -6,9 +6,14 @@ import { Entry } from 'src/entry/entities/entry.entity';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Doctor } from 'src/doctor/entities/doctor.entity';
+import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
-  imports: [ConfigModule, TypeOrmModule.forFeature([Practice, Entry, Doctor])],
+  imports: [
+    ConfigModule,
+    TypeOrmModule.forFeature([Practice, Entry, Doctor]),
+    AuthModule,
+  ],
   controllers: [PracticeController],
   providers: [PracticeService],
 })
