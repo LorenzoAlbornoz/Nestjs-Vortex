@@ -4,6 +4,7 @@ import {
   PrimaryGeneratedColumn,
   OneToOne,
   CreateDateColumn,
+  DeleteDateColumn,
 } from 'typeorm';
 import { HistoryClinic } from '../../history-clinic/entities/history-clinic.entity';
 @Entity({ name: 'patients' })
@@ -28,6 +29,9 @@ export class Patient {
 
   @CreateDateColumn()
   createdAt: Date;
+
+  @DeleteDateColumn()
+  deletedAt: Date;
 
   @OneToOne(() => HistoryClinic, (historyClinic) => historyClinic.patient)
   historyClinic: HistoryClinic;

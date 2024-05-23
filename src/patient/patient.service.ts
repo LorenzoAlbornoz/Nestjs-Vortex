@@ -76,11 +76,18 @@ export class PatientService {
   }
 
   async remove(id: number) {
-    const result = await this.patientRepository.delete({ id });
+    // const result = await this.patientRepository.delete({ id });}
+    const queryBuilder = await this.patientRepository
+      .createQueryBuilder()
+      .softDelete()
+      .where('id = :id', { id })
+      .execute()
 
-    if (result.affected === 0) {
-      return new HttpException('User not found', HttpStatus.NOT_FOUND);
-    }
-    return result;
+    // if (result.affected === 0) {
+    //   return new HttpException('User not found', HttpStatus.NOT_FOUND);
+    // }
+    // return result;
+
+    return 'DELETED'
   }
 }
