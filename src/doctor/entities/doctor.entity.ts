@@ -1,5 +1,11 @@
 import { Entry } from 'src/entry/entities/entry.entity';
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  DeleteDateColumn,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 @Entity({ name: 'doctors' })
 export class Doctor {
@@ -21,6 +27,6 @@ export class Doctor {
   @Column()
   fechaDeIngreso: Date;
 
-  @OneToMany(() => Entry, (entry) => entry.doctor)
+  @OneToMany(() => Entry, (entry) => entry.doctor, { onDelete: 'SET NULL' })
   entry: Entry[];
 }

@@ -4,12 +4,15 @@ import { Repository } from 'typeorm';
 import { Doctor } from './entities/doctor.entity';
 import { CreateDoctorDto } from './dto/create-doctor.dto';
 import { UpdateDoctorDto } from './dto/update-doctor.dto';
+import { Entry } from 'src/entry/entities/entry.entity';
 
 @Injectable()
 export class DoctorService {
   constructor(
     @InjectRepository(Doctor)
     private doctorRepository: Repository<Doctor>,
+    @InjectRepository(Entry)
+    private entryRepository: Repository<Entry>,
   ) {}
 
   async create(createDoctorDto: CreateDoctorDto) {

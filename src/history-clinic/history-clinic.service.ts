@@ -33,7 +33,13 @@ export class HistoryClinicService {
       where: {
         id,
       },
-      relations: ['patient', 'entry'],
+      relations: [
+        'patient',
+        'entry',
+        'entry.doctor',
+        'entry.consultations',
+        'entry.practices',
+      ],
     });
 
     if (!historyClinic) {

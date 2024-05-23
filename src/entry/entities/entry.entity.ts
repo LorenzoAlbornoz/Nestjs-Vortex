@@ -26,12 +26,12 @@ export class Entry {
   @OneToMany(() => Consultation, (consultation) => consultation.entry)
   @JoinColumn()
   consultations: Consultation[];
-  
+ 
   @OneToMany(() => Practice, (practice) => practice.entry)
   @JoinColumn()
   practices: Practice[];
 
-  @ManyToOne(() => Doctor, (doctor) => doctor.entry)
+  @ManyToOne(() => Doctor, (doctor) => doctor.entry, { onDelete: 'SET NULL' })
   @JoinColumn()
   doctor: Doctor;
 }

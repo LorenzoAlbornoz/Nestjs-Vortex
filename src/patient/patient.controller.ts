@@ -44,7 +44,6 @@ export class PatientController {
   }
 
   @Delete(':id')
-  @UseGuards(AuthGuard)
   remove(@Param('id') id: string) {
     return this.patientService.remove(+id);
   }

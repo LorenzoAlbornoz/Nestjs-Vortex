@@ -28,13 +28,4 @@ export class CreatePatientDto {
   @IsString()
   @IsNotEmpty()
   obraSocial: string;
-
-  @IsNumber()
-  @IsNotEmpty()
-  historyClinicId: number; // Agrega esta propiedad para asociar la historia clínica con el paciente
-
-  @IsArray()
-  @ValidateNested({ each: true })
-  @Type(() => CreateEntryDto)
-  entries?: CreateEntryDto[];
 }

@@ -6,18 +6,18 @@ import { Patient } from './entities/patient.entity';
 import { Repository } from 'typeorm';
 import { HistoryClinic } from 'src/history-clinic/entities/history-clinic.entity';
 
-
 @Injectable()
 export class PatientService {
   constructor(
     @InjectRepository(Patient) private patientRepository: Repository<Patient>,
-    @InjectRepository(HistoryClinic) private historyClinicRepository: Repository<HistoryClinic>,
+    @InjectRepository(HistoryClinic)
+    private historyClinicRepository: Repository<HistoryClinic>,
   ) {}
 
   async create(createPatientDto: CreatePatientDto) {
     const userFound = await this.patientRepository.findOne({
       where: {
-        dni: createPatientDto.dni
+        dni: createPatientDto.dni,
       },
     });
 
@@ -27,20 +27,22 @@ export class PatientService {
 
     const newPatient = this.patientRepository.create(createPatientDto);
     await this.patientRepository.save(newPatient);
-  
-    const historyClinic = new HistoryClinic();
-    historyClinic.patient = newPatient; 
 
-    await this.historyClinicRepository.save(historyClinic); 
-  
+    const historyClinic = new HistoryClinic();
+    historyClinic.patient = newPatient;
+
+    await this.historyClinicRepository.save(historyClinic);
+
     return newPatient;
   }
 
   async findAll() {
     return await this.patientRepository.find({
       relations: {
-        historyClinic: true,
-      }
+        historyClinic: {
+          entry: true,
+        },
+      },
     });
   }
 
@@ -49,7 +51,7 @@ export class PatientService {
       where: {
         id,
       },
-      relations: ['historyClinic'],
+      relations: ['historyClinic', 'historyClinic.entry'],
     });
 
     if (!userFound) {
