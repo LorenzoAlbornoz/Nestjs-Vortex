@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   UseGuards,
+  Query,
 } from '@nestjs/common';
 import { DiseaseService } from './disease.service';
 import { CreateDiseaseDto } from './dto/create-disease.dto';
@@ -43,5 +44,10 @@ export class DiseaseController {
   @UseGuards(AuthGuard)
   remove(@Param('id') id: string) {
     return this.diseaseService.remove(+id);
+  }
+
+  @Get('/search/:enfermedad')
+  async findByText(@Param('enfermedad') enfermedad: string){
+    return this.diseaseService.findByText(enfermedad);
   }
 }

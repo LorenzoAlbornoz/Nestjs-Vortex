@@ -3,7 +3,7 @@ import { CreateDiseaseDto } from './dto/create-disease.dto';
 import { UpdateDiseaseDto } from './dto/update-disease.dto';
 import { Disease } from './entities/disease.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, Like } from 'typeorm';
 
 @Injectable()
 export class DiseaseService {
@@ -21,7 +21,7 @@ export class DiseaseService {
     return await this.diseaseRepository.find({
       relations: {
         consultation: true,
-      }
+      },
     });
   }
 
@@ -30,7 +30,7 @@ export class DiseaseService {
       where: {
         id,
       },
-      relations: ['consultation']
+      relations: ['consultation'],
     });
     if (!disease) {
       throw new NotFoundException(`Disease with ID ${id} not found`);
@@ -61,5 +61,11 @@ export class DiseaseService {
       throw new NotFoundException(`Disease with ID ${id} not found`);
     }
     return await this.diseaseRepository.remove(disease);
+  }
+
+  async findByText(text: string) {
+    return await this.diseaseRepository.find({
+      where: [{ enfermedad: Like(`%${text}%`) }],
+    });
   }
 }
