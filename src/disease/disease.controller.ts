@@ -6,20 +6,19 @@ import {
   Patch,
   Param,
   Delete,
-  UseGuards,
-  Query,
 } from '@nestjs/common';
 import { DiseaseService } from './disease.service';
 import { CreateDiseaseDto } from './dto/create-disease.dto';
 import { UpdateDiseaseDto } from './dto/update-disease.dto';
-import { AuthGuard } from 'src/auth/guards/access-token.guard';
+import { Auth } from 'src/common/decorators/auth.decorator';
+import { Role } from 'src/common/enums/rol.enum';
 
+@Auth(Role.SECRETARY)
 @Controller('disease')
 export class DiseaseController {
   constructor(private readonly diseaseService: DiseaseService) {}
 
   @Post()
-  @UseGuards(AuthGuard)
   async create(@Body() createDiseaseDto: CreateDiseaseDto) {
     return this.diseaseService.create(createDiseaseDto);
   }
@@ -35,13 +34,11 @@ export class DiseaseController {
   }
 
   @Patch(':id')
-  @UseGuards(AuthGuard)
   update(@Param('id') id: string, @Body() updateDiseaseDto: UpdateDiseaseDto) {
     return this.diseaseService.update(+id, updateDiseaseDto);
   }
 
   @Delete(':id')
-  @UseGuards(AuthGuard)
   remove(@Param('id') id: string) {
     return this.diseaseService.remove(+id);
   }

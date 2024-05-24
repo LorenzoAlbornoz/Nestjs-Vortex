@@ -7,19 +7,19 @@ import {
   Get,
   Patch,
   Delete,
-  UseGuards,
 } from '@nestjs/common';
 import { PracticeService } from './practice.service';
 import { CreatePracticeDto } from './dto/create-practice.dto';
 import { UpdatePracticeDto } from './dto/update-practice.dto';
-import { AuthGuard } from 'src/auth/guards/access-token.guard';
+import { Auth } from 'src/common/decorators/auth.decorator';
+import { Role } from 'src/common/enums/rol.enum';
 
+@Auth(Role.SECRETARY)
 @Controller('practice')
 export class PracticeController {
   constructor(private readonly practiceService: PracticeService) {}
 
   @Post('/entry/:entryId')
-  @UseGuards(AuthGuard)
   create(
     @Param('entryId')
     entryId: string,
@@ -29,19 +29,16 @@ export class PracticeController {
   }
 
   @Get()
-  @UseGuards(AuthGuard)
   findAll() {
     return this.practiceService.findAll();
   }
 
   @Get(':id')
-  @UseGuards(AuthGuard)
   findOne(@Param('id') id: string) {
     return this.practiceService.findOne(+id);
   }
 
   @Patch(':id')
-  @UseGuards(AuthGuard)
   update(
     @Param('id') id: string,
     @Body() updatePracticeDto: UpdatePracticeDto,
@@ -50,7 +47,6 @@ export class PracticeController {
   }
 
   @Delete(':id')
-  @UseGuards(AuthGuard)
   remove(@Param('id') id: string) {
     return this.practiceService.remove(+id);
   }

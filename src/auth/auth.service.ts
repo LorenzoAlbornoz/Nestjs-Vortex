@@ -31,15 +31,15 @@ export class AuthService {
       role,
     });
 
-    return{
+    return {
       name,
       email,
-      role
-    }
+      role,
+    };
   }
 
   async login({ email, password }: LoginDto) {
-    const user = await this.userService.findOneByEmail(email);
+    const user = await this.userService.findByEmailWithPassword(email);
     if (!user) {
       throw new UnauthorizedException('email is wrong');
     }
@@ -52,7 +52,10 @@ export class AuthService {
     const payload = { email: user.email, role: user.role };
     const token = await this.jwtService.signAsync(payload);
 
-    return token
+    return {
+      token,
+      email,
+    };
   }
 
   async profile({ email, role }: { email: string; role: string }) {
