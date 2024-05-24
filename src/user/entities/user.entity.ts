@@ -1,3 +1,4 @@
+import { Role } from 'src/common/enums/rol.enum';
 import {
   Column,
   DeleteDateColumn,
@@ -20,8 +21,8 @@ export class User {
   @Column({ nullable: false })
   password: string;
 
-  // @Column({ type: 'enum', enum: Role.ADMIN, default: Role.SECRETARY })
-  // rol: string;
+  @Column({ type: 'enum', enum: Role, default: 'secretary' })
+  role: string;
 
   // lo elimino pero sigo teniendo un registro(me puede servir para futuros estudios)
   @DeleteDateColumn()
