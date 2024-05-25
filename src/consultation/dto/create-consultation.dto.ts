@@ -17,5 +17,5 @@ export class CreateConsultationDto {
   @IsOptional()
   notasMedico?: string;
 
-  createdAt: Date;
+  fecha: Date;
 }

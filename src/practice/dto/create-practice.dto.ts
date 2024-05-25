@@ -14,5 +14,5 @@ export class CreatePracticeDto {
   @IsOptional()
   notasMedico?: string;
 
-  createdAt: Date;
+  fecha: Date;
 }

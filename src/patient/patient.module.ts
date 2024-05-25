@@ -7,15 +7,16 @@ import { ConfigModule } from '@nestjs/config';
 import { HistoryClinic } from 'src/history-clinic/entities/history-clinic.entity';
 import { Entry } from 'src/entry/entities/entry.entity';
 import { AuthModule } from 'src/auth/auth.module';
+import { HistoryClinicModule } from 'src/history-clinic/history-clinic.module';
 
 @Module({
   imports: [
     ConfigModule,
     TypeOrmModule.forFeature([Patient, HistoryClinic, Entry]),
     AuthModule,
+    HistoryClinicModule,
   ],
   controllers: [PatientController],
   providers: [PatientService],
-  exports: [TypeOrmModule],
 })
 export class PatientModule {}

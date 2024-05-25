@@ -1,10 +1,20 @@
-import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
+interface EntryId {
+  id: number;
+}
+
+import {
+  Injectable,
+  HttpException,
+  HttpStatus,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreatePatientDto } from './dto/create-patient.dto';
 import { UpdatePatientDto } from './dto/update-patient.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Patient } from './entities/patient.entity';
 import { Repository } from 'typeorm';
 import { HistoryClinic } from 'src/history-clinic/entities/history-clinic.entity';
+import { HistoryClinicService } from 'src/history-clinic/history-clinic.service';
 
 @Injectable()
 export class PatientService {
@@ -12,6 +22,7 @@ export class PatientService {
     @InjectRepository(Patient) private patientRepository: Repository<Patient>,
     @InjectRepository(HistoryClinic)
     private historyClinicRepository: Repository<HistoryClinic>,
+    private historyClinicService: HistoryClinicService,
   ) {}
 
   async create(createPatientDto: CreatePatientDto) {
@@ -38,26 +49,35 @@ export class PatientService {
 
   async findAll() {
     return await this.patientRepository.find({
-      relations: {
-        historyClinic: {
-          entries: true,
-        },
-      },
+      relations: ['historyClinic', 'historyClinic.entries.doctor'],
     });
   }
 
-  async findOne(id: number) {
-    const userFound = await this.patientRepository.findOne({
-      where: {
-        id,
-      },
-      relations: ['historyClinic', 'historyClinic.entry'],
+  async findOnePatient(id: number): Promise<any> {
+    const patientFound = await this.patientRepository.findOne({
+      where: { id },
+      relations: ['historyClinic'],
     });
 
-    if (!userFound) {
-      return new HttpException('User not found', HttpStatus.NOT_FOUND);
+    if (!patientFound) {
+      throw new NotFoundException('User not found');
     }
-    return userFound;
+
+    let entryIds: EntryId[] = [];
+    if (patientFound.historyClinic) {
+      const historyFound = await this.historyClinicService.findOne(
+        patientFound.historyClinic.id,
+      );
+      entryIds = historyFound.entries.map((entry) => ({ id: entry.id }));
+    }
+
+    return {
+      ...patientFound,
+      historyClinic: {
+        ...patientFound.historyClinic,
+        entries: entryIds,
+      },
+    };
   }
 
   async update(id: number, updatePatientDto: UpdatePatientDto) {
@@ -77,9 +97,9 @@ export class PatientService {
 
   async remove(id: number) {
     const patient = await this.patientRepository.findOne({
-      where:{
+      where: {
         id,
-      }
+      },
     });
     if (!patient) {
       throw new Error('Patient not found');

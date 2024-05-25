@@ -16,6 +16,6 @@ import { AuthModule } from 'src/auth/auth.module';
   ],
   controllers: [HistoryClinicController],
   providers: [HistoryClinicService],
-  exports: [TypeOrmModule]
+  exports: [HistoryClinicService]
 })
 export class HistoryClinicModule {}

@@ -6,12 +6,14 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { HistoryClinicService } from './history-clinic.service';
 import { CreateHistoryClinicDto } from './dto/create-history-clinic.dto';
 import { UpdateHistoryClinicDto } from './dto/update-history-clinic.dto';
 import { Auth } from 'src/common/decorators/auth.decorator';
 import { Role } from 'src/common/enums/rol.enum';
+import { PatientHistory } from 'src/interfaces/patient-history.interface';
 
 @Auth(Role.SECRETARY)
 @Controller('history-clinic')
@@ -29,8 +31,35 @@ export class HistoryClinicController {
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: string) {
-    return await this.historyClinicService.findOne(+id);
+  async findPatientHistoryById(
+    @Param('id') historyClinicId: string,
+    @Query('type') type: 'practice' | 'consultation',
+    @Query('fromDate') fromDate: Date,
+    @Query('toDate') toDate: Date,
+  ) {
+    const patientHistory =
+      await this.historyClinicService.findPatientHistoryById(+historyClinicId);
+
+    if (!patientHistory) {
+      return undefined;
+    }
+
+    if (type) {
+      patientHistory.entries = patientHistory.entries.filter(
+        (entry) => entry.type === type,
+      );
+    }
+
+    if (fromDate && toDate) {
+      const fromDateObj = new Date(fromDate);
+      const toDateObj = new Date(toDate);
+      patientHistory.entries = patientHistory.entries.filter((entry) => {
+        const entryDate = new Date(entry.data.fecha);
+        return entryDate >= fromDateObj && entryDate <= toDateObj;
+      });
+    }
+
+    return patientHistory;
   }
 
   @Patch(':id')
