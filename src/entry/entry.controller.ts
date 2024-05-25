@@ -8,8 +8,6 @@ import {
   Delete,
 } from '@nestjs/common';
 import { EntryService } from './entry.service';
-import { CreateEntryDto } from './dto/create-entry.dto';
-import { UpdateEntryDto } from './dto/update-entry.dto';
 import { Auth } from 'src/common/decorators/auth.decorator';
 import { Role } from 'src/common/enums/rol.enum';
 
@@ -18,9 +16,12 @@ import { Role } from 'src/common/enums/rol.enum';
 export class EntryController {
   constructor(private readonly entryService: EntryService) {}
 
-  @Post()
-  create(@Body() createEntryDto: CreateEntryDto) {
-    return this.entryService.create(createEntryDto);
+  @Post('/historyClinic/:historyClinicId/doctor/:doctorId')
+  create(
+    @Param('historyClinicId') historyClinicId: string,
+    @Param('doctorId') doctorId: string,
+  ) {
+    return this.entryService.create(+historyClinicId, +doctorId);
   }
 
   @Get()
@@ -31,11 +32,6 @@ export class EntryController {
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.entryService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateEntryDto: UpdateEntryDto) {
-    return this.entryService.update(+id, updateEntryDto);
   }
 
   @Delete(':id')

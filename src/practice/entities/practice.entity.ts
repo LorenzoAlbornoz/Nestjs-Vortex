@@ -1,11 +1,4 @@
-import { Entry } from 'src/entry/entities/entry.entity';
-import {
-  Column,
-  Entity,
-  JoinColumn,
-  ManyToOne,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity({ name: 'practice' })
 export class Practice {
@@ -26,8 +19,4 @@ export class Practice {
 
   @Column()
   notasMedico: string;
-
-  @ManyToOne(() => Entry, (entry) => entry.practices)
-  @JoinColumn()
-  entry: Entry;
 }

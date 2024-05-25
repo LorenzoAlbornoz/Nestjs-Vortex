@@ -1,6 +1,21 @@
+import { IsString, IsOptional, IsNotEmpty } from 'class-validator';
+
 export class CreateConsultationDto {
+  @IsString()
+  @IsNotEmpty()
   motivoDeConsulta: string;
+
+  @IsString()
+  @IsNotEmpty()
   diagnostico: string;
-  confimacionDeDiagnostico: string;
+
+  @IsString()
+  @IsNotEmpty()
+  confirmacionDeDiagnostico: string; 
+
+  @IsString()
+  @IsOptional()
   notasMedico?: string;
+
+  createdAt: Date;
 }

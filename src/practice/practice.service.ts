@@ -5,6 +5,7 @@ import { Practice } from './entities/practice.entity';
 import { CreatePracticeDto } from './dto/create-practice.dto';
 import { Entry } from 'src/entry/entities/entry.entity';
 import { UpdatePracticeDto } from './dto/update-practice.dto';
+import { EntryType } from 'src/common/enums/entry-type.enum';
 
 @Injectable()
 export class PracticeService {
@@ -24,15 +25,28 @@ export class PracticeService {
     }
 
     const practice = new Practice();
-    practice.entry = entry;
     practice.duracionDelProcedimiento =
       createPracticeDto.duracionDelProcedimiento;
     practice.complicaciones = createPracticeDto.complicaciones;
     practice.resultadoFinal = createPracticeDto.resultadoFinal;
     practice.notasMedico = createPracticeDto.notasMedico;
 
-    // Guardar la práctica en la base de datos
-    return this.practiceRepository.save(practice);
+    const createdAt = new Date();
+    entry.type = EntryType.PRACTICE;
+    // Guardar los datos de la consulta en el campo 'type' de Entry
+    entry.data = {
+      duracionDelProcedimiento: practice.duracionDelProcedimiento,
+      complicaciones: practice.complicaciones,
+      resultadoFinal: practice.resultadoFinal,
+      notasMedico: practice.notasMedico,
+      fecha: createdAt.toISOString()
+    };
+
+    // Guardar la entrada actualizada
+    await this.entryRepository.save(entry);
+
+    // Guardar la consulta en la tabla 'consultation'
+    return await this.practiceRepository.save(practice);
   }
 
   async findAll() {

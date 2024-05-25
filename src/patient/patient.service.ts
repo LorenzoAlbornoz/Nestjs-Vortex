@@ -40,7 +40,7 @@ export class PatientService {
     return await this.patientRepository.find({
       relations: {
         historyClinic: {
-          entry: true,
+          entries: true,
         },
       },
     });

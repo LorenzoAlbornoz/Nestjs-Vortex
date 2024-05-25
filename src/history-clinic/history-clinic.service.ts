@@ -23,7 +23,7 @@ export class HistoryClinicService {
     return await this.historyClinicRepository.find({
       relations: {
         patient: true,
-        entry: true,
+        entries: true,
       },
     });
   }

@@ -2,8 +2,6 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Entry } from './entities/entry.entity';
-import { CreateEntryDto } from './dto/create-entry.dto';
-import { UpdateEntryDto } from './dto/update-entry.dto';
 import { HistoryClinic } from 'src/history-clinic/entities/history-clinic.entity';
 import { Doctor } from 'src/doctor/entities/doctor.entity';
 
@@ -18,34 +16,33 @@ export class EntryService {
     private doctorRepository: Repository<Doctor>,
   ) {}
 
-  async create(createEntryDto: CreateEntryDto) {
+  async create(historyClinicId: number, doctorId: number) {
     // Verificar si existe la historia clínica
     const historyClinic = await this.historyClinicRepository.findOne({
       where: {
-        id: createEntryDto.historyClinicId, // Usar el ID correcto aquí
+        id: historyClinicId,
       },
     });
     if (!historyClinic) {
       throw new NotFoundException(
-        `HistoryClinic with ID ${createEntryDto.historyClinicId} not found`,
+        `HistoryClinic with ID ${historyClinicId} not found`,
       );
     }
 
     const doctor = await this.doctorRepository.findOne({
       where: {
-        id: createEntryDto.doctorId,
+        id: doctorId,
       },
     });
     if (!doctor) {
-      throw new NotFoundException(
-        `Doctor with ID ${createEntryDto.doctorId} not found`,
-      );
+      throw new NotFoundException(`Doctor with ID ${doctorId} not found`);
     }
 
     // Crear una nueva entrada asociada con la historia clínica
     const newEntry = new Entry();
     newEntry.historyClinic = historyClinic;
     newEntry.doctor = doctor;
+    newEntry.data = [];
 
     return await this.entryRepository.save(newEntry);
   }
@@ -67,10 +64,6 @@ export class EntryService {
       throw new NotFoundException(`Entry with ID ${id} not found`);
     }
     return entry;
-  }
-
-  async update(id: number, updateEntryDto: UpdateEntryDto) {
-    // Aquí puedes implementar la lógica para actualizar una entrada
   }
 
   async remove(id: number) {

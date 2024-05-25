@@ -1,5 +1,4 @@
 import { Disease } from 'src/disease/entities/disease.entity';
-import { Entry } from 'src/entry/entities/entry.entity';
 import {
   Column,
   Entity,
@@ -23,7 +22,7 @@ export class Consultation {
   diagnostico: string;
 
   @Column()
-  confimacionDeDiagnostico: string;
+  confirmacionDeDiagnostico: string;
 
   @Column()
   notasMedico: string;
@@ -32,7 +31,4 @@ export class Consultation {
   @JoinColumn()
   disease: Disease;
 
-  @ManyToOne(() => Entry, (entry) => entry.consultations)
-  @JoinColumn()
-  entry: Entry;
 }

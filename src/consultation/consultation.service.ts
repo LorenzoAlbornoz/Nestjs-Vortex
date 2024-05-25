@@ -12,6 +12,7 @@ import { Repository } from 'typeorm';
 import { Entry } from 'src/entry/entities/entry.entity';
 import { Doctor } from 'src/doctor/entities/doctor.entity';
 import { Disease } from 'src/disease/entities/disease.entity';
+import { EntryType } from 'src/common/enums/entry-type.enum';
 
 @Injectable()
 export class ConsultationService {
@@ -45,24 +46,40 @@ export class ConsultationService {
       throw new NotFoundException(`Disease with ID ${diseaseId} not found`);
     }
 
+    // Crear la consulta
     const consultation = new Consultation();
-    consultation.entry = entry;
     consultation.disease = disease;
     consultation.motivoDeConsulta = createConsultationDto.motivoDeConsulta;
     consultation.diagnostico = createConsultationDto.diagnostico;
-    consultation.confimacionDeDiagnostico =
-      createConsultationDto.confimacionDeDiagnostico;
+    consultation.confirmacionDeDiagnostico =
+      createConsultationDto.confirmacionDeDiagnostico;
     consultation.notasMedico = createConsultationDto.notasMedico;
 
-    return this.consultationRepository.save(consultation);
+    const createdAt = new Date();
+    entry.type = EntryType.CONSULTATION;
+    // Guardar los datos de la consulta en el campo 'type' de Entry
+    entry.data = {
+      disease: consultation.disease,
+      motivoDeConsulta: consultation.motivoDeConsulta,
+      diagnostico: consultation.diagnostico,
+      confimacionDeDiagnostico: consultation.confirmacionDeDiagnostico,
+      notasMedico: consultation.notasMedico,
+      fecha: createdAt.toISOString()
+    };
+
+    // Guardar la entrada actualizada
+    await this.entryRepository.save(entry);
+
+    // Guardar la consulta en la tabla 'consultation'
+    return await this.consultationRepository.save(consultation);
   }
 
   async findAll() {
     return await this.consultationRepository.find({
       relations: {
         disease: true,
-        entry: true,
-      }
+        // entry: true,
+      },
     });
   }
 
@@ -71,7 +88,7 @@ export class ConsultationService {
       where: {
         id,
       },
-      relations: ['disease', 'entry']
+      relations: ['disease', 'entry'],
     });
 
     if (!consultation) {

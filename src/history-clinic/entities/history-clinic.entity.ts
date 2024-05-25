@@ -22,6 +22,6 @@ export class HistoryClinic {
   patient: Patient;
 
   @OneToMany(() => Entry, (entry) => entry.historyClinic)
-  entry: Entry[];
+  entries: Entry[];
 
 }
