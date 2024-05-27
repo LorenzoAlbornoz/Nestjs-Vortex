@@ -4,12 +4,9 @@ import {
   HttpStatus,
   NotFoundException,
 } from '@nestjs/common';
-import { CreateHistoryClinicDto } from './dto/create-history-clinic.dto';
-import { UpdateHistoryClinicDto } from './dto/update-history-clinic.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { HistoryClinic } from './entities/history-clinic.entity';
 import { Repository } from 'typeorm';
-import { PatientHistory } from 'src/interfaces/patient-history.interface';
 
 @Injectable()
 export class HistoryClinicService {
@@ -17,13 +14,6 @@ export class HistoryClinicService {
     @InjectRepository(HistoryClinic)
     private readonly historyClinicRepository: Repository<HistoryClinic>,
   ) {}
-
-  async create(createHistoryClinicDto: CreateHistoryClinicDto) {
-    const newHistoryClinic = this.historyClinicRepository.create(
-      createHistoryClinicDto,
-    );
-    return await this.historyClinicRepository.save(newHistoryClinic);
-  }
 
   async findAll() {
     return await this.historyClinicRepository.find({
@@ -52,27 +42,6 @@ export class HistoryClinicService {
       where: { id: historyClinicId },
       relations: ['patient', 'entries'],
     });
-  }
-
-  async update(id: number, updateHistoryClinicDto: UpdateHistoryClinicDto) {
-    const historyClinic = await this.historyClinicRepository.findOne({
-      where: {
-        id,
-      },
-    });
-
-    if (!historyClinic) {
-      throw new HttpException(
-        `HistoryClinic with id ${id} not found`,
-        HttpStatus.NOT_FOUND,
-      );
-    }
-
-    const updatedHistoryClinic = Object.assign(
-      historyClinic,
-      updateHistoryClinicDto,
-    );
-    return await this.historyClinicRepository.save(updatedHistoryClinic);
   }
 
   async remove(id: number) {

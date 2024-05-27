@@ -10,10 +10,12 @@ import {
 import { PatientService } from './patient.service';
 import { CreatePatientDto } from './dto/create-patient.dto';
 import { UpdatePatientDto } from './dto/update-patient.dto';
-import { AuthGuard } from 'src/auth/guards/access-token.guard';
 import { Auth } from 'src/common/decorators/auth.decorator';
 import { Role } from 'src/common/enums/rol.enum';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
+@ApiBearerAuth()
+@ApiTags('Patient')
 @Auth(Role.SECRETARY)
 @Controller('patient')
 export class PatientController {

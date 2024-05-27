@@ -4,7 +4,10 @@ import { Auth } from 'src/common/decorators/auth.decorator';
 import { Role } from 'src/common/enums/rol.enum';
 import { Entry } from './entities/entry.entity';
 import { EntryType } from 'src/common/enums/entry-type.enum';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
+@ApiBearerAuth()
+@ApiTags('Entry')
 @Auth(Role.SECRETARY)
 @Controller('entry')
 export class EntryController {

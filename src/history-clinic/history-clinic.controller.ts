@@ -9,21 +9,16 @@ import {
   Query,
 } from '@nestjs/common';
 import { HistoryClinicService } from './history-clinic.service';
-import { CreateHistoryClinicDto } from './dto/create-history-clinic.dto';
-import { UpdateHistoryClinicDto } from './dto/update-history-clinic.dto';
 import { Auth } from 'src/common/decorators/auth.decorator';
 import { Role } from 'src/common/enums/rol.enum';
-import { PatientHistory } from 'src/interfaces/patient-history.interface';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
+@ApiBearerAuth()
+@ApiTags('History-Clinic')
 @Auth(Role.SECRETARY)
 @Controller('history-clinic')
 export class HistoryClinicController {
   constructor(private readonly historyClinicService: HistoryClinicService) {}
-
-  @Post()
-  async create(@Body() createHistoryClinicDto: CreateHistoryClinicDto) {
-    return await this.historyClinicService.create(createHistoryClinicDto);
-  }
 
   @Get()
   async findAll() {
@@ -60,14 +55,6 @@ export class HistoryClinicController {
     }
 
     return patientHistory;
-  }
-
-  @Patch(':id')
-  async update(
-    @Param('id') id: string,
-    @Body() updateHistoryClinicDto: UpdateHistoryClinicDto,
-  ) {
-    return await this.historyClinicService.update(+id, updateHistoryClinicDto);
   }
 
   @Delete(':id')
