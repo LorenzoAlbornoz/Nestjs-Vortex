@@ -1,3 +1,4 @@
+//defino la estructura de mis objetos
 export interface Patient {
   id: number;
   dni: number;

@@ -5,8 +5,7 @@ export class CreatePracticeDto {
   @IsNotEmpty()
   duracionDelProcedimiento: string;
   @IsString()
-  @IsNotEmpty()
-  complicaciones: string;
+  complicaciones?: string;
   @IsString()
   @IsNotEmpty()
   resultadoFinal: string;
