@@ -75,11 +75,9 @@ export class EntryService {
       .leftJoinAndSelect('entry.historyClinic', 'historyClinic')
       .leftJoinAndSelect('historyClinic.patient', 'patient');
 
-    if (type !== undefined && type !== 'all') {
+    if (type && type !== 'all') {
       const typesArray = Array.isArray(type) ? type : [type];
-      query.andWhere('entry.type IN (:...types) OR entry.type IS NULL', {
-        types: typesArray,
-      });
+      query.andWhere('entry.type IN (:...types)', { types: typesArray });
     }
 
     if (from && to) {

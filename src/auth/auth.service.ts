@@ -18,19 +18,28 @@ export class AuthService {
   ) {}
 
   async register({ name, email, password, role }: RegisterDto) {
+    console.log('Register function called');
+    console.log('Received data:', { name, email, password, role });
+
     const user = await this.userService.findOneByEmail(email);
+    console.log('User found:', user);
 
     if (user) {
+      console.log('User already exists');
       throw new BadRequestException('User already exists');
     }
+
+    const hashedPassword = await bcryptjs.hash(password, 10);
+    console.log('Hashed password:', hashedPassword);
 
     await this.userService.create({
       name,
       email,
-      password: await bcryptjs.hash(password, 10),
+      password: hashedPassword,
       role,
     });
 
+    console.log('User created successfully');
     return {
       name,
       email,

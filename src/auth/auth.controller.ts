@@ -18,6 +18,7 @@ export class AuthController {
     @Body()
     registerDto: RegisterDto,
   ) {
+    console.log('algo', registerDto)
     return this.authService.register(registerDto);
   }
 
@@ -26,6 +27,7 @@ export class AuthController {
     @Body()
     loginDto: LoginDto,
   ) {
+    console.log('algo', loginDto)
     return this.authService.login(loginDto);
   }
 
