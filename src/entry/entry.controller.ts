@@ -5,6 +5,7 @@ import { Role } from 'src/common/enums/rol.enum';
 import { Entry } from './entities/entry.entity';
 import { EntryType } from 'src/common/enums/entry-type.enum';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { PracticeDTO } from './dto/dto-salida-entry.dto';
 
 @ApiBearerAuth()
 @ApiTags('Entry')
@@ -43,7 +44,7 @@ export class EntryController {
     @Query('dni') dni?: string,
     @Query('diagnosis') diagnosis?: string,
     @Query('complication') complication?: boolean,
-  ): Promise<Entry[]> {
+  ): Promise<PracticeDTO[]> {
     const dniArray = Array.isArray(dni) ? dni : dni ? [dni] : undefined;
     return this.entryService.findAll(
       type,

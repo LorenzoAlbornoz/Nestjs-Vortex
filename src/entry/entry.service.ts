@@ -6,6 +6,7 @@ import { HistoryClinic } from 'src/history-clinic/entities/history-clinic.entity
 import { Doctor } from 'src/doctor/entities/doctor.entity';
 import { EntryType } from 'src/common/enums/entry-type.enum';
 import { Patient } from 'src/patient/entities/patient.entity';
+import { PracticeDTO } from './dto/dto-salida-entry.dto';
 
 @Injectable()
 export class EntryService {
@@ -51,12 +52,6 @@ export class EntryService {
     return await this.entryRepository.save(newEntry);
   }
 
-  // async findAll() {
-  //   return await this.entryRepository.find({
-  //     relations: ['historyClinic', 'doctor'],
-  //   });
-  // }
-
   async findAll(
     type?: EntryType | 'all' | (EntryType | 'all')[],
     from?: Date,
@@ -68,12 +63,12 @@ export class EntryService {
     dni?: string[],
     diagnosis?: string,
     complication?: boolean,
-  ): Promise<Entry[]> {
+  ): Promise<PracticeDTO[]> {
     const query = this.entryRepository
       .createQueryBuilder('entry')
       .innerJoinAndSelect('entry.doctor', 'doctor')
-      .leftJoinAndSelect('entry.historyClinic', 'historyClinic')
-      .leftJoinAndSelect('historyClinic.patient', 'patient');
+      .innerJoinAndSelect('entry.historyClinic', 'historyClinic')
+      .innerJoinAndSelect('historyClinic.patient', 'patient');
 
     if (type && type !== 'all') {
       const typesArray = Array.isArray(type) ? type : [type];
@@ -99,10 +94,6 @@ export class EntryService {
       query.andWhere('doctor.specialty = :specialty', { specialty });
     }
 
-    if (!includeDeleted) {
-      query.andWhere('patient.deletedAt IS NULL');
-    }
-
     if (socialWork) {
       query.andWhere('patient.obraSocial = :socialWork', { socialWork });
     }
@@ -110,6 +101,12 @@ export class EntryService {
     if (dni && dni.length > 0) {
       query.andWhere('patient.dni IN (:...dni)').setParameters({ dni });
     }
+
+    // if (includeDeleted) {
+    //   query.withDeleted();
+    // } else {
+    //   query.andWhere('patient.deletedAt IS NOT NULL');
+    // }
 
     if (diagnosis) {
       query.andWhere(`entry.data->'disease'->>'enfermedad' = :diagnosis`, {
@@ -119,11 +116,23 @@ export class EntryService {
 
     if (complication !== undefined) {
       if (complication) {
-        query.andWhere(`entry.data->>'complicaciones' IS NOT NULL`);
+        // No aplicar filtro específico para las complicaciones
+      } else {
+        query.andWhere(`entry.data->>'complicaciones' = ''`);
       }
     }
 
-    return query.getMany();
+    const resultsFromDatabase = await query.getMany();
+
+    const practiceDTOs: PracticeDTO[] = resultsFromDatabase.map((result) => ({
+      id: result.id,
+      type: result.type,
+      data: result.data,
+      doctor: result.doctor,
+      patient: result.historyClinic.patient,
+    }));
+
+    return practiceDTOs;
   }
 
   async findOne(id: number) {
