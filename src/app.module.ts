@@ -32,6 +32,7 @@ import { RequestsLoggerMiddleware } from './common/middleware/requests-logger.mi
         password: configService.get('database.password'),
         database: configService.get('database.database'),
         autoLoadEntities: true,
+        logging: true,
         synchronize: true,
       }),
     }),

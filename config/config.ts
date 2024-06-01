@@ -13,4 +13,7 @@ export default () => ({
   jwt: {
     secret: process.env.SECRET_JWT,
   },
+  upload: {
+    upload: process.env.UPLOAD
+  }
 });
