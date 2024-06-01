@@ -10,7 +10,7 @@ export const renameImage = (req, file, cb) => {
 };
 
 export const fileFilter = (req, file, cb) => {
-  if (!file.originalname.math(/\.(jpg|jpeg|png|gif)$/)) {
+  if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/)) {
     return cb(new Error('Invalid format type'), false);
   }
 
