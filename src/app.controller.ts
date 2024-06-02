@@ -15,13 +15,20 @@ export class AppController {
     @Res({ passthrough: true }) res: Response,
   ): Promise<StreamableFile> {
     const url = 'https://link.testfile.org/PDF200MB';
-    const response = await axios.get(url, { responseType: 'stream' });
-
-    res.set({
-      'Content-Type': 'application/pdf',
-      'Content-Disposition': 'attachment; filename="PDF200MB.pdf"',
-    });
-
-    return new StreamableFile(response.data);
+    try {
+      const response = await axios.get(url, { responseType: 'stream' });
+      console.log('Response:', response);
+      if (response.status !== 200) {
+        throw new Error(`Failed to retrieve PDF file: ${response.status}`);
+      }
+      res.set({
+        'Content-Type': 'application/pdf',
+        'Content-Disposition': 'attachment; filename="PDF200MB.pdf"',
+      });
+      return new StreamableFile(response.data);
+    } catch (error) {
+      console.error('Error:', error);
+      res.status(500).send({ message: 'Failed to retrieve PDF file' });
+    }
   }
 }
